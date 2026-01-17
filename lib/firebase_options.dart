@@ -65,4 +65,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'aicademy-3c0b8.firebasestorage.app',
     iosBundleId: 'com.example.aicademy',
   );
+
 }
