@@ -1,4 +1,4 @@
-# aicademy
+# AIcademy
 
 A new Flutter project.
 
