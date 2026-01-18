@@ -1,0 +1,12 @@
+[33mdc40131[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{0}: commit (merge): phase 2 commit befire pull merge
+[33m94b0acf[m HEAD@{1}: commit: phase 2 commit 2 - before merge pull
+[33m4762b67[m HEAD@{2}: checkout: moving from phase_2_shukri to main
+[33m7fec263[m[33m ([m[1;32mphase_2_shukri[m[33m)[m HEAD@{3}: commit: phase 2 shukri before merge/ pulling
+[33m87025c0[m[33m ([m[1;31morigin/phase_1_bb[m[33m, [m[1;32mstatus[m[33m, [m[1;32mphase_1_bb[m[33m)[m HEAD@{4}: checkout: moving from phase_1_bb to phase_2_shukri
+[33m87025c0[m[33m ([m[1;31morigin/phase_1_bb[m[33m, [m[1;32mstatus[m[33m, [m[1;32mphase_1_bb[m[33m)[m HEAD@{5}: commit: phase 1: merge updated
+[33mffd1d4b[m HEAD@{6}: commit (merge): phase 1 backend and frontend merge
+[33m34b3f0f[m HEAD@{7}: commit: backup push of phase 1 backend changes before pulling
+[33m4762b67[m HEAD@{8}: checkout: moving from main to phase_1_bb
+[33m4762b67[m HEAD@{9}: commit (merge): Resolve merge conflict in README.md
+[33md60822e[m HEAD@{10}: Branch: renamed refs/heads/master to refs/heads/main
+[33md60822e[m HEAD@{12}: commit (initial): initial commit
