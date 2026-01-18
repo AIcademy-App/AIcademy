@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
-import 'screens/navigation.dart'; 
+import 'screens/navigation.dart';
+import 'screens/check_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,8 +24,25 @@ class MyApp extends StatelessWidget {
         primaryColor: const Color(0xFF00E5BC),
         fontFamily: 'Urbanist',
       ),
-      // Set the imported screen as home
-      home: const MainNavigationScreen(), 
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          // Loading state
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
+
+          // User is logged in → Show app
+          if (snapshot.hasData) {
+            return const MainNavigationScreen();
+          }
+
+          // User is NOT logged in → Show auth screen
+          return const CheckScreen();
+        },
+      ),
     );
   }
 }

@@ -1,5 +1,5 @@
 class Scheduler {
-  String id; 
+  String id;
   String task;
   DateTime time;
   bool isCompleted;

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-
 class SchedulerPage extends StatefulWidget {
   const SchedulerPage({super.key});
 
@@ -21,18 +20,25 @@ class _SchedulerPageState extends State<SchedulerPage> {
 
   // Helper to get the formatted string for the header based on selection
   String _getSelectedDateString() {
-    DateTime selectedDate = DateTime.now().add(Duration(days: _selectedDayIndex));
-    return DateFormat('EEEE d').format(selectedDate) + _getDaySuffix(selectedDate.day);
+    DateTime selectedDate = DateTime.now().add(
+      Duration(days: _selectedDayIndex),
+    );
+    return DateFormat('EEEE d').format(selectedDate) +
+        _getDaySuffix(selectedDate.day);
   }
 
   // Helper for "st", "nd", "rd", "th" suffixes
   String _getDaySuffix(int day) {
     if (day >= 11 && day <= 13) return 'th';
     switch (day % 10) {
-      case 1: return 'st';
-      case 2: return 'nd';
-      case 3: return 'rd';
-      default: return 'th';
+      case 1:
+        return 'st';
+      case 2:
+        return 'nd';
+      case 3:
+        return 'rd';
+      default:
+        return 'th';
     }
   }
 
@@ -48,7 +54,9 @@ class _SchedulerPageState extends State<SchedulerPage> {
 
             IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () {Navigator.pop(context);},
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
             const Text(
               "Scheduler",
@@ -73,19 +81,25 @@ class _SchedulerPageState extends State<SchedulerPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text("To Do",
-                          style: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontFamily: 'Urbanist')),
+                      const Text(
+                        "To Do",
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontFamily: 'Urbanist',
+                        ),
+                      ),
                       // FIXED: This now updates based on the selected horizontal date
-                      Text(_getSelectedDateString(),
-                          style: const TextStyle(
-                              color: Color(0xFF00E5BC),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              fontFamily: 'Urbanist')),
+                      Text(
+                        _getSelectedDateString(),
+                        style: const TextStyle(
+                          color: Color(0xFF00E5BC),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          fontFamily: 'Urbanist',
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 15),
@@ -134,11 +148,14 @@ class _SchedulerPageState extends State<SchedulerPage> {
                           color: Color(0xFFC4C4C4),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.arrow_downward,
-                            color: Colors.black, size: 24),
+                        child: const Icon(
+                          Icons.arrow_downward,
+                          color: Colors.black,
+                          size: 24,
+                        ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -153,17 +170,23 @@ class _SchedulerPageState extends State<SchedulerPage> {
                 itemCount: 14,
                 itemBuilder: (context, index) {
                   DateTime date = DateTime.now().add(Duration(days: index));
-                  String dayLabel = DateFormat('EEEE').format(date).toUpperCase();
+                  String dayLabel = DateFormat(
+                    'EEEE',
+                  ).format(date).toUpperCase();
                   String dateLabel = DateFormat('d').format(date);
 
                   return GestureDetector(
                     onTap: () {
                       setState(() {
-                        _selectedDayIndex = index; // Updates the header text automatically
+                        _selectedDayIndex =
+                            index; // Updates the header text automatically
                       });
                     },
                     child: _buildDateCard(
-                        dayLabel, dateLabel, _selectedDayIndex == index),
+                      dayLabel,
+                      dateLabel,
+                      _selectedDayIndex == index,
+                    ),
                   );
                 },
               ),
@@ -175,7 +198,7 @@ class _SchedulerPageState extends State<SchedulerPage> {
     );
   }
 
-//Task Item Widget
+  //Task Item Widget
   Widget _buildTaskItem(String title) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -185,13 +208,19 @@ class _SchedulerPageState extends State<SchedulerPage> {
         color: const Color(0xFF2C2C2C),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Text(title,
-          style: const TextStyle(
-              fontSize: 24, color: Colors.white,fontWeight:FontWeight.bold, fontFamily: 'Urbanist')),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 24,
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Urbanist',
+        ),
+      ),
     );
   }
 
-// Date Card Widget
+  // Date Card Widget
 
   Widget _buildDateCard(String day, String date, bool isSelected) {
     return Container(
@@ -207,24 +236,31 @@ class _SchedulerPageState extends State<SchedulerPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(day.substring(0, 3),
-              style: const TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
-                  fontFamily: 'Urbanist')),
+          Text(
+            day.substring(0, 3),
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w900,
+              color: Colors.white,
+              fontFamily: 'Urbanist',
+            ),
+          ),
           const SizedBox(height: 5),
-          Text(date,
-              style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
-                  fontFamily: 'Urbanist')),
+          Text(
+            date,
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w900,
+              color: Colors.white,
+              fontFamily: 'Urbanist',
+            ),
+          ),
           const SizedBox(height: 5),
           Container(
-              height: 3,
-              width: 20,
-              color: isSelected ? const Color(0xFF00E5BC) : Colors.transparent),
+            height: 3,
+            width: 20,
+            color: isSelected ? const Color(0xFF00E5BC) : Colors.transparent,
+          ),
         ],
       ),
     );

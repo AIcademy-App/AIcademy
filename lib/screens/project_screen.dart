@@ -11,7 +11,7 @@ class ProjectPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 80),
-          
+
           // Header Section
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -28,15 +28,23 @@ class ProjectPage extends StatelessWidget {
               _buildLabel(),
             ],
           ),
-          
+
           const SizedBox(height: 30),
 
           // 3D Action Cards
           Row(
             children: [
-              _buildMainCard("Pomodoro\nTimer", "assets/images/pomodoro.png", imageScale: 1.0),
+              _buildMainCard(
+                "Pomodoro\nTimer",
+                "assets/images/pomodoro.png",
+                imageScale: 1.0,
+              ),
               const SizedBox(width: 15),
-              _buildMainCard("Scheduler", "assets/images/calander.png", imageScale: 0.8),
+              _buildMainCard(
+                "Scheduler",
+                "assets/images/calander.png",
+                imageScale: 0.8,
+              ),
             ],
           ),
 
@@ -47,7 +55,10 @@ class ProjectPage extends StatelessWidget {
             style: const TextStyle(color: Colors.black),
             decoration: InputDecoration(
               hintText: "Hinted search text",
-              hintStyle: const TextStyle(color: Colors.black45, fontFamily: 'Urbanist'),
+              hintStyle: const TextStyle(
+                color: Colors.black45,
+                fontFamily: 'Urbanist',
+              ),
               fillColor: Colors.white,
               filled: true,
               suffixIcon: const Icon(Icons.search, color: Colors.black),
@@ -55,7 +66,10 @@ class ProjectPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(30),
                 borderSide: BorderSide.none,
               ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 15,
+              ),
             ),
           ),
 
@@ -69,10 +83,7 @@ class ProjectPage extends StatelessWidget {
               gradient: const LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
-                colors: [
-                  Color(0xFF23C174), 
-                  Color(0xFF00C9E0), 
-                ],
+                colors: [Color(0xFF23C174), Color(0xFF00C9E0)],
               ),
               borderRadius: BorderRadius.circular(30),
             ),
@@ -80,8 +91,8 @@ class ProjectPage extends StatelessWidget {
               child: Text(
                 "+ New Project",
                 style: TextStyle(
-                  fontSize: 18, 
-                  fontWeight: FontWeight.w800, 
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
                   color: Colors.black,
                   fontFamily: 'Urbanist',
                 ),
@@ -90,7 +101,6 @@ class ProjectPage extends StatelessWidget {
           ),
 
           const SizedBox(height: 10), // Reduced space to move grid up
-
           // Grid of Projects
           GridView.count(
             shrinkWrap: true,
@@ -106,7 +116,7 @@ class ProjectPage extends StatelessWidget {
     );
   }
 
-//label 
+  //label
 
   Widget _buildLabel() {
     return Container(
@@ -121,12 +131,12 @@ class ProjectPage extends StatelessWidget {
           Icon(Icons.stars, color: Colors.white, size: 16),
           SizedBox(width: 5),
           Text(
-            "Label", 
+            "Label",
             style: TextStyle(
-              color: Colors.white, 
-              fontSize: 12, 
+              color: Colors.white,
+              fontSize: 12,
               fontWeight: FontWeight.bold,
-              fontFamily: 'Urbanist'
+              fontFamily: 'Urbanist',
             ),
           ),
         ],
@@ -135,10 +145,14 @@ class ProjectPage extends StatelessWidget {
   }
 
   // Card Helper with Image Scaling logic
-  Widget _buildMainCard(String title, String imagePath, {double imageScale = 1.0}) {
+  Widget _buildMainCard(
+    String title,
+    String imagePath, {
+    double imageScale = 1.0,
+  }) {
     return Expanded(
       child: Container(
-        height: 200, 
+        height: 200,
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: const Color(0xFF1E1E1E),
@@ -157,7 +171,11 @@ class ProjectPage extends StatelessWidget {
                     imagePath,
                     fit: BoxFit.contain,
                     errorBuilder: (context, error, stackTrace) {
-                      return const Icon(Icons.image_not_supported, color: Colors.white24, size: 50);
+                      return const Icon(
+                        Icons.image_not_supported,
+                        color: Colors.white24,
+                        size: 50,
+                      );
                     },
                   ),
                 ),
@@ -167,12 +185,12 @@ class ProjectPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  title, 
+                  title,
                   style: const TextStyle(
-                    color: Colors.white, 
-                    fontWeight: FontWeight.w900, 
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
                     fontSize: 16,
-                    fontFamily: 'Urbanist'
+                    fontFamily: 'Urbanist',
                   ),
                 ),
                 const Icon(Icons.arrow_forward, color: Colors.white, size: 18),
@@ -191,7 +209,7 @@ class ProjectPage extends StatelessWidget {
         borderRadius: BorderRadius.circular(25),
       ),
       child: const Center(
-        child: Icon(Icons.category, color: Colors.black38, size: 60)
+        child: Icon(Icons.category, color: Colors.black38, size: 60),
       ),
     );
   }
