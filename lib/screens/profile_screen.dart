@@ -150,7 +150,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           height: 100,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: const Color(0xFF18a394),
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF23C174), Color(0xFF00C9E0)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
                           ),
                           child: photoUrl != null
                               ? CircleAvatar(

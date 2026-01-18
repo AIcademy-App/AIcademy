@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/project.dart';
 import '../services/project_service.dart';
@@ -118,15 +119,34 @@ class _ProjectPageState extends State<ProjectPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Pickachu",
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  fontFamily: 'Urbanist',
+              if (user != null)
+                StreamBuilder<DocumentSnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(user.uid)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    String userName = '...';
+                    if (snapshot.hasData && snapshot.data != null) {
+                      final data =
+                          snapshot.data!.data() as Map<String, dynamic>?;
+                      userName = data?['fullName'] ?? 'User';
+                    }
+                    return Flexible(
+                      child: Text(
+                        userName,
+                        style: const TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontFamily: 'Urbanist',
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    );
+                  },
                 ),
-              ),
               _buildLabel(),
             ],
           ),
