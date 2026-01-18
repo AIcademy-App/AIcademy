@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/shedular_model.dart';
+import '../services/reminder_service.dart';
 
 class SchedulerPage extends StatefulWidget {
   const SchedulerPage({super.key});
@@ -18,249 +21,247 @@ class _SchedulerPageState extends State<SchedulerPage> {
     super.dispose();
   }
 
-  // Helper to get the formatted string for the header based on selection
-  String _getSelectedDateString() {
-    DateTime selectedDate = DateTime.now().add(
-      Duration(days: _selectedDayIndex),
-    );
-    return DateFormat('EEEE d').format(selectedDate) +
-        _getDaySuffix(selectedDate.day);
+  // --- CRUD OPERATIONS ---
+
+  Future<void> _addNewTask() async {
+    await _showTaskDialog(title: "Add New Task");
   }
 
-  // Helper for "st", "nd", "rd", "th" suffixes
-  String _getDaySuffix(int day) {
-    if (day >= 11 && day <= 13) return 'th';
-    switch (day % 10) {
-      case 1:
-        return 'st';
-      case 2:
-        return 'nd';
-      case 3:
-        return 'rd';
-      default:
-        return 'th';
-    }
+  Future<void> _editTask(Scheduler schedule) async {
+    await _showTaskDialog(title: "Edit Task", existingTask: schedule);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 100),
+  Future<void> _deleteTask(String docId) async {
+    await ReminderService.taskRef.doc(docId).delete();
+  }
 
-            IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            const Text(
-              "Scheduler",
-              style: TextStyle(
-                fontSize: 36,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontFamily: 'Urbanist',
+// --- DIALOG FOR ADDING/EDITING TASK ---
+
+  Future<void> _showTaskDialog({required String title, Scheduler? existingTask}) async {
+    final TextEditingController titleController = TextEditingController(text: existingTask?.task ?? "");
+    DateTime pickedDateTime = existingTask?.time ?? DateTime.now();
+
+    await showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          backgroundColor: const Color(0xFF1E1E1E),
+          title: Text(title, style: const TextStyle(color: Colors.white, fontFamily: 'Urbanist')),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: titleController,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(0xFF00E5BC))),
+                  hintText: "What needs to be done?",
+                  hintStyle: TextStyle(color: Colors.grey),
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-
-            // To-Do Section
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1E1E1E),
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "To Do",
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontFamily: 'Urbanist',
-                        ),
-                      ),
-                      // FIXED: This now updates based on the selected horizontal date
-                      Text(
-                        _getSelectedDateString(),
-                        style: const TextStyle(
-                          color: Color(0xFF00E5BC),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          fontFamily: 'Urbanist',
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-
-                  SizedBox(
-                    height: 250,
-                    child: ListView(
-                      controller: _taskScrollController,
-                      physics: const BouncingScrollPhysics(),
-                      padding: EdgeInsets.zero,
-                      children: [
-                        _buildTaskItem("Work 01"),
-                        _buildTaskItem("Work Todo List 01"),
-                        _buildTaskItem("Sample work 03"),
-                        _buildTaskItem("Sample work 04"),
-                        _buildTaskItem("Sample work 05"),
-                        _buildTaskItem("Sample work 06"),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  TweenAnimationBuilder(
-                    tween: Tween<double>(begin: 0, end: 10),
-                    duration: const Duration(milliseconds: 600),
-                    curve: Curves.easeInOutSine,
-                    builder: (context, double value, child) {
-                      return Padding(
-                        padding: EdgeInsets.only(top: value),
-                        child: child,
-                      );
-                    },
-                    child: GestureDetector(
-                      onTap: () {
-                        _taskScrollController.animateTo(
-                          _taskScrollController.offset + 80,
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeOut,
-                        );
-                      },
-                      child: Container(
-                        width: 45,
-                        height: 45,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFC4C4C4),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.arrow_downward,
-                          color: Colors.black,
-                          size: 24,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 30),
-
-            // REAL Horizontal Date Picker
-            SizedBox(
-              height: 100,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 14,
-                itemBuilder: (context, index) {
-                  DateTime date = DateTime.now().add(Duration(days: index));
-                  String dayLabel = DateFormat(
-                    'EEEE',
-                  ).format(date).toUpperCase();
-                  String dateLabel = DateFormat('d').format(date);
-
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _selectedDayIndex =
-                            index; // Updates the header text automatically
-                      });
-                    },
-                    child: _buildDateCard(
-                      dayLabel,
-                      dateLabel,
-                      _selectedDayIndex == index,
-                    ),
-                  );
+              const SizedBox(height: 15),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.access_time, color: Color(0xFF00E5BC)),
+                title: Text(DateFormat('hh:mm a').format(pickedDateTime), style: const TextStyle(color: Colors.white)),
+                onTap: () async {
+                  TimeOfDay? time = await ReminderService.pickTime(context, pickedDateTime);
+                  if (time != null) {
+                    setDialogState(() {
+                      pickedDateTime = ReminderService.combine(pickedDateTime, time);
+                    });
+                  }
                 },
               ),
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel", style: TextStyle(color: Colors.white))),
+            TextButton(
+              onPressed: () async {
+                if (titleController.text.isNotEmpty) {
+                  if (existingTask == null) {
+                    final newTask = Scheduler(
+                      task: titleController.text,
+                      time: pickedDateTime,
+                      dayIndex: _selectedDayIndex,
+                    );
+                    await ReminderService.taskRef.add(newTask.toMap());
+                  } else {
+                    await ReminderService.taskRef.doc(existingTask.scheduleId).update({
+                      'task': titleController.text,
+                      'time': Timestamp.fromDate(pickedDateTime),
+                    });
+                  }
+                  if (mounted) Navigator.pop(context);
+                }
+              },
+              child: const Text("Save", style: TextStyle(color: Color(0xFF00E5BC))),
             ),
-            const SizedBox(height: 120),
           ],
         ),
       ),
     );
   }
 
-  //Task Item Widget
-  Widget _buildTaskItem(String title) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 15),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: const Color(0xFF2C2C2C),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 24,
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Urbanist',
+  // --- MAIN BUILDER ---
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      bottomNavigationBar: _buildBottomNav(),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 60),
+              IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () => Navigator.pop(context),
+              ),
+              const Text("Scheduler", style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Urbanist')),
+              Text(_getSelectedDateString(), style: const TextStyle(color: Color(0xFF00E5BC), fontWeight: FontWeight.bold, fontSize: 18)),
+              const SizedBox(height: 25),
+              
+              // Task Container
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(color: const Color(0xFF1E1E1E), borderRadius: BorderRadius.circular(25)),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("To Do", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
+                        IconButton(onPressed: _addNewTask, icon: const Icon(Icons.add_circle, color: Color(0xFF00E5BC), size: 32)),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    SizedBox(
+                      height: 360,
+                      child: StreamBuilder<QuerySnapshot>(
+                        stream: ReminderService.taskRef
+                            .where('dayIndex', isEqualTo: _selectedDayIndex)
+                            .orderBy('time', descending: false)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) return const Center(child: Text("Query error. Check index.", style: TextStyle(color: Colors.red)));
+                          if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
+
+                          var docs = snapshot.data!.docs;
+                          if (docs.isEmpty) return const Center(child: Text("Relax! No tasks for today.", style: TextStyle(color: Colors.grey)));
+
+                          return ListView.builder(
+                            controller: _taskScrollController,
+                            itemCount: docs.length,
+                            itemBuilder: (context, index) {
+                              final schedule = Scheduler.fromMap(docs[index].data() as Map<String, dynamic>, docs[index].id);
+                              return _buildTaskItem(schedule);
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 30),
+              _buildHorizontalDatePicker(),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  // Date Card Widget
-
-  Widget _buildDateCard(String day, String date, bool isSelected) {
-    return Container(
-      margin: const EdgeInsets.only(right: 15),
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
-        borderRadius: BorderRadius.circular(15),
-        border: isSelected
-            ? Border.all(color: const Color(0xFF00E5BC), width: 1)
-            : null,
+  // --- WIDGET BUILDERS ---
+  Widget _buildTaskItem(Scheduler schedule) {
+    return Dismissible(
+      key: Key(schedule.scheduleId!),
+      onDismissed: (_) => _deleteTask(schedule.scheduleId!),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20),
+        margin: const EdgeInsets.only(bottom: 10),
+        decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(12)),
+        child: const Icon(Icons.delete, color: Colors.white),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: GestureDetector(
+        onTap: () => _editTask(schedule),
+        child: Container(
+          height: 65,
+          margin: const EdgeInsets.only(bottom: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          decoration: BoxDecoration(color: const Color(0xFF2C2C2C), borderRadius: BorderRadius.circular(12)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(child: Text(schedule.task, style: const TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis)),
+              Text(DateFormat('hh:mm a').format(schedule.time), style: const TextStyle(color: Color(0xFF00E5BC), fontWeight: FontWeight.bold)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+// --- HORIZONTAL DATE PICKER ---
+  Widget _buildHorizontalDatePicker() {
+    return SizedBox(
+      height: 100,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: 14,
+        itemBuilder: (context, index) {
+          DateTime date = DateTime.now().add(Duration(days: index));
+          bool isSelected = _selectedDayIndex == index;
+          return GestureDetector(
+            onTap: () => setState(() => _selectedDayIndex = index),
+            child: Container(
+              margin: const EdgeInsets.only(right: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1E1E1E),
+                borderRadius: BorderRadius.circular(15),
+                border: isSelected ? Border.all(color: const Color(0xFF00E5BC)) : null,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(DateFormat('E').format(date).toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 12,fontWeight: FontWeight.bold)),
+                  Text(DateFormat('d').format(date), style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w900)),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+// --- HELPER METHODS ---
+  String _getSelectedDateString() {
+    DateTime date = DateTime.now().add(Duration(days: _selectedDayIndex));
+    return DateFormat('EEEE, MMMM d').format(date);
+  }
+
+// --- BOTTOM NAVIGATION BAR ---
+  Widget _buildBottomNav() {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(25, 0, 25, 30),
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      decoration: BoxDecoration(color: const Color(0xFF1E1E1E), borderRadius: BorderRadius.circular(35)),
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text(
-            day.substring(0, 3),
-            style: const TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w900,
-              color: Colors.white,
-              fontFamily: 'Urbanist',
-            ),
-          ),
-          const SizedBox(height: 5),
-          Text(
-            date,
-            style: const TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w900,
-              color: Colors.white,
-              fontFamily: 'Urbanist',
-            ),
-          ),
-          const SizedBox(height: 5),
-          Container(
-            height: 3,
-            width: 20,
-            color: isSelected ? const Color(0xFF00E5BC) : Colors.transparent,
-          ),
+          Icon(Icons.folder_outlined, color: Colors.white),
+          Icon(Icons.timer_outlined, color: Colors.white),
+          Icon(Icons.calendar_today, color: Color(0xFF00E5BC)),
+          Icon(Icons.person_outline, color: Colors.white),
         ],
       ),
     );
