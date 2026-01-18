@@ -1,32 +1,32 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Scheduler {
-  String id;
+  final String? scheduleId;
   String task;
   DateTime time;
-  bool isCompleted;
+  int dayIndex;
 
   Scheduler({
-    required this.id,
+    this.scheduleId,
     required this.task,
     required this.time,
-    this.isCompleted = false,
+    required this.dayIndex,
   });
 
-  // Convert for Firestore
+  factory Scheduler.fromMap(Map<String, dynamic> map, String id) {
+    return Scheduler(
+      scheduleId: id,
+      task: map['task'] ?? '',
+      time: map['time'] != null ? (map['time'] as Timestamp).toDate() : DateTime.now(),
+      dayIndex: map['dayIndex'] ?? 0,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'task': task,
-      'time': time.toIso8601String(),
-      'isCompleted': isCompleted,
+      'time': Timestamp.fromDate(time),
+      'dayIndex': dayIndex,
     };
-  }
-
-  // Create object from Firestore data
-  factory Scheduler.fromMap(String id, Map<String, dynamic> map) {
-    return Scheduler(
-      id: id,
-      task: map['task'] ?? '',
-      time: DateTime.parse(map['time']),
-      isCompleted: map['isCompleted'] ?? false,
-    );
   }
 }

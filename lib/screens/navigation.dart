@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'schedular_screen.dart';
 import 'project_screen.dart';
 import 'profile_screen.dart';
+import 'pomodoro_screen.dart';
 
 // --- THEME CONSTANTS ---
 class AppColors {
@@ -24,7 +25,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 //profile screen only works when user is logged in
   final List<Widget> _pages = [
     const ProjectPage(),
-    const Center(child: Text("Pomodoro Timer (Empty)")),
+    const PomodoroPage(),
     const SchedulerPage(),
     const ProfileScreen(),
   ];
