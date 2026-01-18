@@ -13,22 +13,38 @@ class StorageService {
     required Function(double) onProgress,
   }) async {
     try {
+      // 1. Validate inputs to prevent malformed paths
+      if (uid.isEmpty || projectId.isEmpty) {
+        throw Exception('User ID or Project ID is empty');
+      }
+
       final fileName = file.path.split('/').last;
       final storagePath = 'users/$uid/projects/$projectId/files/$fileName';
       
-      final uploadTask = _storage.ref(storagePath).putFile(file);
+      final ref = _storage.ref().child(storagePath);
+      final uploadTask = ref.putFile(file);
 
-      // Listen to upload progress
-      uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
-        final progress =
-            snapshot.bytesTransferred / snapshot.totalBytes;
-        onProgress(progress);
-      });
+      // 2. Listen to upload progress with error handling inside the stream
+      uploadTask.snapshotEvents.listen(
+        (TaskSnapshot snapshot) {
+          final progress = snapshot.bytesTransferred / snapshot.totalBytes;
+          onProgress(progress);
+        },
+        onError: (e) => print('Upload stream error: $e'),
+      );
 
-      final taskSnapshot = await uploadTask;
-      final downloadUrl = await taskSnapshot.ref.getDownloadURL();
+      // 3. CRITICAL FIX: Explicitly wait for completion before asking for the URL
+      // This ensures the object exists before 'getDownloadURL' is called
+      await uploadTask.whenComplete(() => {});
 
+      final downloadUrl = await ref.getDownloadURL();
       return downloadUrl;
+    } on FirebaseException catch (e) {
+      // Catch specific Firebase Storage errors
+      if (e.code == 'object-not-found') {
+        throw Exception('Storage Error: The file was not found after upload. Check storage rules.');
+      }
+      throw Exception('Firebase Storage Error: ${e.message}');
     } catch (e) {
       throw Exception('Error uploading file: $e');
     }
