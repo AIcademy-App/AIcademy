@@ -10,6 +10,8 @@ import '../services/ai_service.dart';
 import '../main.dart'; // To access PdfService from main
 import 'add_files_screen.dart';
 import 'note_editor_screen.dart';
+import 'quiz_list_screen.dart';
+import 'chat_screen.dart';
 
 class ProjectDetailsScreen extends StatefulWidget {
   final Project project;
@@ -149,8 +151,12 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
           _buildActionItem('Add Notes', Icons.edit_note, onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => NoteEditorScreen(project: widget.project)));
           }),
-          _buildActionItem('Quiz', Icons.quiz),
-          _buildActionItem('Chat', Icons.chat_bubble_outline),
+          _buildActionItem('Quiz', Icons.quiz, onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => QuizListScreen(project: widget.project)));
+          }),
+          _buildActionItem('Chat', Icons.chat_bubble_outline, onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen(project: widget.project)));
+          }),
         ],
       ),
     );
