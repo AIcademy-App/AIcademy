@@ -7,27 +7,31 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Dark background as requested
+      // Dark background
       backgroundColor: const Color(0xFF121212),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Spacer(flex: 3),
+            // 1. Pushes the logo to the "little upper center"
+            const Spacer(flex: 6),
+
             // Logo: Group 16 from assets/images
-            // Placed in the "little upper center" via Spacers
             Image.asset(
               'assets/images/Group 16.png',
-              height: 120,
+              height: 160,
               errorBuilder: (context, error, stackTrace) =>
-                  const Icon(Icons.image_not_supported, size: 100, color: Colors.white),
+                  const Icon(Icons.image_not_supported, size: 150, color: Colors.white),
             ),
-            const SizedBox(height: 40),
+
+            // 2. This Spacer fills the middle, pushing the button to the bottom
+            const Spacer(flex: 6),
+
             // Gradient Button "EXPLORE"
             Container(
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Color(0xFF23C174), Color(0xFF00C9E0)], // Purple/Blue gradient
+                  colors: [Color(0xFF23C174), Color(0xFF00C9E0)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -43,16 +47,24 @@ class WelcomeScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent,
-                  padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
                 ),
                 child: const Text(
                   "EXPLORE",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
-            const Spacer(flex: 4),
+
+            // 3. Bottom padding to prevent the button from touching the screen edge
+            const SizedBox(height: 150),
           ],
         ),
       ),
