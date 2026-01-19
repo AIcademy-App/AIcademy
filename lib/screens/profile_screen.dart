@@ -73,12 +73,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         appBar: AppBar(
           backgroundColor: const Color(0xFF121212),
           elevation: 0,
-          title: const Text(
-            'Profile',
-            style: TextStyle(
-              color: Color(0xFF18a394),
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+          title: ShaderMask(
+            shaderCallback: (bounds) => const LinearGradient(
+              colors: [Color(0xFF23C174), Color(0xFF00C9E0)],
+            ).createShader(bounds),
+            child: const Text(
+              'Profile',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           centerTitle: true,
@@ -97,12 +102,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF121212),
         elevation: 0,
-        title: const Text(
-          'Profile',
-          style: TextStyle(
-            color: Color(0xFF18a394),
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+        title: ShaderMask(
+          shaderCallback: (bounds) => const LinearGradient(
+            colors: [Color(0xFF23C174), Color(0xFF00C9E0)],
+          ).createShader(bounds),
+          child: const Text(
+            'Profile',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         centerTitle: true,
@@ -113,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF18a394)),
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF00C9E0)),
               ),
             );
           }
@@ -137,7 +147,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
           return SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+              padding: const EdgeInsets.fromLTRB(16, 24, 16, 120),
               child: Column(
                 children: [
                   // Profile Avatar & Name Section
@@ -188,26 +198,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         const SizedBox(height: 16),
                         // Edit Profile Button
-                        ElevatedButton(
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Edit profile coming soon'),
-                              ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF18a394),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 32,
-                              vertical: 10,
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF23C174), Color(0xFF00C9E0)],
                             ),
+                            borderRadius: BorderRadius.circular(30),
                           ),
-                          child: const Text(
-                            'Edit Profile',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Edit profile coming soon'),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 32,
+                                vertical: 10,
+                              ),
+                            ),
+                            child: const Text(
+                              'Edit Profile',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ),
@@ -227,12 +246,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Bio',
-                          style: TextStyle(
-                            color: Color(0xFF18a394),
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
+                        ShaderMask(
+                          shaderCallback: (bounds) => const LinearGradient(
+                            colors: [Color(0xFF23C174), Color(0xFF00C9E0)],
+                          ).createShader(bounds),
+                          child: const Text(
+                            'Bio',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -281,12 +305,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Account Info',
-                          style: TextStyle(
-                            color: Color(0xFF18a394),
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
+                        ShaderMask(
+                          shaderCallback: (bounds) => const LinearGradient(
+                            colors: [Color(0xFF23C174), Color(0xFF00C9E0)],
+                          ).createShader(bounds),
+                          child: const Text(
+                            'Account Info',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -348,7 +377,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: const Color(0xFF18a394), size: 28),
+          ShaderMask(
+            shaderCallback: (bounds) => const LinearGradient(
+              colors: [Color(0xFF23C174), Color(0xFF00C9E0)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ).createShader(bounds),
+            child: Icon(icon, color: Colors.white, size: 28),
+          ),
           const SizedBox(height: 8),
           Text(
             value,
