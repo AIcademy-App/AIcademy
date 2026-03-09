@@ -1,16 +1,39 @@
-# AIcademy
+# 🤖 AIcademy – AI-Powered Study Assistant
 
-A new Flutter project.
+AIcademy is a mobile application designed to help students organize their learning, manage schedules, and get personalized study support using AI.  
+The app combines features like reminders, note summarization, revision tools, and an AI-powered chatbot for interacting with uploaded PDFs.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🌟 Project Highlights
 
-A few resources to get you started if this is your first Flutter project:
+- 📱 Mobile study assistant with Android and Flutter
+- 📝 Note summarization and revision tools
+- ⏰ Reminders and scheduling for organized learning
+- 🤖 AI chatbot integrated with Gemini API for personalized study support
+- 👥 Collaborative development in a two-member team
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## ✨ Features
+
+- 🗓️ Set reminders and create study schedules
+- 📚 Upload and interact with PDFs via AI chatbot
+- ✏️ Summarize notes for quick revision
+- 🔄 Personalized learning recommendations
+- 💡 Organized and efficient study workflow
+
+---
+
+## 🛠️ Tech Stack
+
+**Mobile Development:**  
+- Flutter  
+- Android SDK  
+
+**Backend & Services:**  
+- Firebase (Authentication, Database, Storage)  
+- Gemini API (AI chatbot for PDF interaction)  
+
+**Tools:**  
+- Git & GitHub  
